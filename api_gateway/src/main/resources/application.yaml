@@ -1,0 +1,24 @@
+server:
+  port: 8080
+eureka:
+  client:
+    service-url:
+      default-zone: http://eureka-server-hostname:8761
+
+spring:
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: PRODUCT-SERVICE
+            uri: http://localhost:8081
+            predicates:
+              - Path=/product/**
+            filters:
+              - RewritePath=/product/(?<path>.*), /$\{path}
+          - id: INVENTORY-SERVICE
+            uri: http://localhost:8082
+            predicates:
+              - Path=/inventory/**
+            filters:
+              -  RewritePath=/inventory/(?<path>.*), /$\{path}
