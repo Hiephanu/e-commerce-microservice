@@ -1,5 +1,6 @@
 package com.example.cartService.model.entity;
 
+import com.example.cartService.model.dto.ProductCartItemSaveDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,5 +23,16 @@ public class CartItem {
     @PrePersist
     public void prePersist() {
         ci_createdAt = LocalDate.now();
+    }
+
+    public static CartItem convertToCartItem(ProductCartItemSaveDto productCartItemSaveDto) {
+        Cart cart = new Cart();
+        cart.setC_id(productCartItemSaveDto.getCart_id());
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setQuantity(productCartItemSaveDto.getQuantity());
+        cartItem.setCi_productId(productCartItemSaveDto.getProduct_id());
+
+        return cartItem;
     }
 }

@@ -14,7 +14,6 @@ import java.util.List;
 public class CartService {
     private final CartRepository cartRepository;
 
-
     public Cart createCart(long userId) {
         Cart cart = new Cart();
         cart.setC_userId(userId);
