@@ -1,22 +1,68 @@
 package com.example.cartService.controller;
 
-import com.example.cartService.service.CartService;
+import com.example.cartService.model.dto.AddToCartRequest;
+import com.example.cartService.model.dto.DeleteCartItem;
+import com.example.cartService.model.dto.UpdateCartItemRequest;
+import com.example.cartService.service.CartRedisService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cart")
 @AllArgsConstructor
+@RequestMapping("/carts")
 public class CartController {
-    private  final CartService cartService;
-    @GetMapping("")
-    public ResponseEntity<?> getInventory() {
-        return null;
+    private final CartRedisService cartRedisService;
+
+    @PostMapping("/add-to-cart")
+    public ResponseEntity<?> addToCart(@RequestBody AddToCartRequest addToCartRequest) {
+        try {
+            cartRedisService.addProductToCart(addToCartRequest);
+            return  ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  ResponseEntity.internalServerError().build();
+        }
     }
 
-    @PostMapping("")
-    public ResponseEntity<?> createCart(@PathVariable long userId) {
-        return null;
+    @GetMapping("/get-all")
+    public  ResponseEntity<?> getAllCartItem(@RequestBody long customerId) {
+        try {
+            return  ResponseEntity.ok(cartRedisService.getAllProductInCart(customerId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  ResponseEntity.internalServerError().build();
+        }
+    }
+    @PutMapping("/update")
+    public ResponseEntity<?> updateQuantity(@RequestBody UpdateCartItemRequest updateCartItemRequest) {
+        try {
+            cartRedisService.updateProductQuantityInCart(updateCartItemRequest.getCustomerId(), updateCartItemRequest.getProductId(), updateCartItemRequest.getQuantity());
+            return  ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCartItem(@RequestBody DeleteCartItem deleteCartItem) {
+        try {
+            cartRedisService.removeProductItem(deleteCartItem.getCustomerId(), deleteCartItem.getProductId());
+            return  ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  ResponseEntity.internalServerError().build();
+        }
+    }
+    @DeleteMapping("/delete/clear")
+    public ResponseEntity<?> clearCart(@RequestBody long customerId) {
+        try {
+            cartRedisService.clearCart(customerId);
+            return  ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  ResponseEntity.internalServerError().build();
+        }
     }
 }
