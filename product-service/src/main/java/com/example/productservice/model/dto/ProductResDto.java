@@ -2,6 +2,7 @@ package com.example.productservice.model.dto;
 
 import com.example.productservice.model.entity.Brand;
 import com.example.productservice.model.entity.ProductMedia;
+import com.example.productservice.model.entity.Specific;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class ProductResDto {
     private String p_origin;
     private Brand p_brand;
     private int p_quantity;
+    private List<Specific> p_specs;
     private int p_sold;
-    private List<ProductMedia> p_images;
+    private List<String> p_images;
     private List<String> p_categories;
 }

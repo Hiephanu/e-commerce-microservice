@@ -47,7 +47,6 @@ public class ProductRepository {
         query.addCriteria(Criteria.where("p_name").regex(keyword, "i"));
         query.with(pageable);
         return  mongoTemplate.find(query, Product.class);
-
     }
 
     public  List<Product> getProductByView(Pageable pageable) {

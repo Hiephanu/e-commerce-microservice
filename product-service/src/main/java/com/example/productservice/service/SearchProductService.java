@@ -22,15 +22,9 @@ public class SearchProductService {
 
     private final SearchHistoryRepository searchHistoryRepository;
 
-    @Cacheable(value = "products", key = "#keyword + '_' + #page + '_' +#perPage ")
     public List<ProductResDto> searchProductByKeyword(String keyword, int page, int perPage) {
         Pageable pageable = PageRequest.of(page, perPage);
         List<Product> products = productRepository.findByKeyword(keyword, pageable);
-        return products.stream().map(ConvertProduct::convertToProductResponseDto).toList();
-    }
-
-    @Scheduled(fixedDelay = 15 * 60 *1000)
-    public  void clearCache() {
-        return;
+        return products.stream().map(convertProduct::convertToProductResponseDto).toList();
     }
 }

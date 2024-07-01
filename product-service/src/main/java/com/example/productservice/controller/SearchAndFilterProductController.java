@@ -1,5 +1,6 @@
 package com.example.productservice.controller;
 
+import com.example.productservice.converter.ConvertProduct;
 import com.example.productservice.exception.model.InternalServerErrorException;
 import com.example.productservice.model.dto.ProductFilter;
 import com.example.productservice.model.entity.Product;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchAndFilterProductController {
     private final FilterProductService filterProductService;
+    private final ConvertProduct convertProduct;
 
     @GetMapping("")
     public ResponseEntity<ResponseBody> searchProductByKeyword(@RequestParam String keyword,
@@ -23,7 +25,7 @@ public class SearchAndFilterProductController {
                                                                @RequestParam(defaultValue = "20") int perPage) {
         try {
             List<Product> products = filterProductService.searchProductByKeyword(keyword, page, perPage);
-            return  ResponseEntity.ok(new ResponseBody("Success", products, "SUCCESS"));
+            return  ResponseEntity.ok(new ResponseBody("Success", products.stream().map(convertProduct::convertToProductResponseDto), "SUCCESS"));
         } catch (Exception e) {
             throw   new InternalServerErrorException(e.getMessage());
         }
@@ -35,7 +37,7 @@ public class SearchAndFilterProductController {
                                                               @RequestParam(defaultValue = "20") int perPage) {
         try {
             List<Product> products= filterProductService.findByCategory(category, page, perPage);
-            return  ResponseEntity.ok(new ResponseBody("Success", products, "SUCCESS"));
+            return  ResponseEntity.ok(new ResponseBody("Success",  products.stream().map(convertProduct::convertToProductResponseDto), "SUCCESS"));
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }
@@ -47,7 +49,7 @@ public class SearchAndFilterProductController {
                                                       @RequestParam(defaultValue = "10") int perPage)  {
         try {
             List<Product> products = filterProductService.filterProduct(productFilter, page, perPage);
-            return ResponseEntity.ok(new ResponseBody("Success", products, "SUCCESS"));
+            return ResponseEntity.ok(new ResponseBody("Success",  products.stream().map(convertProduct::convertToProductResponseDto), "SUCCESS"));
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }

@@ -1,6 +1,7 @@
 package com.example.productservice.config;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -20,12 +21,13 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 @EnableScheduling
+@NoArgsConstructor
 @AllArgsConstructor
 public class RedisConfig {
-    @Value("${redis.host}")
+    @Value("${spring.redis.host}")
     private String redisHost;
 
-    @Value("${redis.port}")
+    @Value("${spring.redis.port}")
     private int redisPort;
 
     @Bean

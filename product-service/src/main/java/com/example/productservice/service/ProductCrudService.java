@@ -5,6 +5,7 @@ import com.example.productservice.exception.model.InvalidException;
 import com.example.productservice.exception.model.NotFoundException;
 import com.example.productservice.model.dto.FileSaveReturn;
 import com.example.productservice.model.dto.ProductPostSaveDto;
+import com.example.productservice.model.dto.ProductResDto;
 import com.example.productservice.model.entity.Product;
 import com.example.productservice.model.entity.ProductMedia;
 import com.example.productservice.repository.ProductRepository;
@@ -22,20 +23,20 @@ public class ProductCrudService {
     private final ProductRepository productRepository;
     private final ConvertProduct convertProduct;
     private final MinioStorageService minioStorageService;
-    public Product getProductById(String id){
+    public ProductResDto getProductById(String id){
        if(id ==null){
            throw new InvalidException("Id can not be null");
        } else {
            Optional<Product> product = productRepository.findById(id);
            if(product.isPresent()){
-               return product.get();
+               return convertProduct.convertToProductResponseDto(product.get());
            } else  {
                throw new NotFoundException("Product not found");
            }
        }
     }
 
-    public Product saveProduct(ProductPostSaveDto productPostSaveDto,List<MultipartFile> files) throws Exception {
+    public ProductResDto saveProduct(ProductPostSaveDto productPostSaveDto,List<MultipartFile> files) throws Exception {
         List<ProductMedia> productMedia = new ArrayList<>();
         for(MultipartFile file : files) {
             FileSaveReturn fileSaveReturn = minioStorageService.save(file,file.getOriginalFilename());
@@ -43,12 +44,13 @@ public class ProductCrudService {
         }
         Product productConvert=  convertProduct.convertToProduct(productPostSaveDto);
         productConvert.setP_images(productMedia);
-        return productRepository.save(productConvert);
+        return convertProduct.convertToProductResponseDto(productRepository.save(productConvert));
     }
 
     public Product updateProductById(){
         return  null;
     }
+
     public String deleteProduct(String id){
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){

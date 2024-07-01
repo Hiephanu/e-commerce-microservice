@@ -22,6 +22,7 @@ public class ProductCrudController {
         try{
             return ResponseEntity.ok(new ResponseBody("Success",getProductService.getProductById(id),"SUCCESS"));
         } catch (Exception e){
+            e.printStackTrace();
             throw new InternalServerErrorException(e.getMessage());
         }
     }
