@@ -25,8 +25,8 @@ public class CartController {
         }
     }
 
-    @GetMapping("/get-all")
-    public  ResponseEntity<?> getAllCartItem(@RequestBody long customerId) {
+    @GetMapping("/get-all/{customerId}")
+    public  ResponseEntity<?> getAllCartItem(@PathVariable long customerId) {
         try {
             return  ResponseEntity.ok(cartRedisService.getAllProductInCart(customerId));
         } catch (Exception e) {
@@ -55,8 +55,8 @@ public class CartController {
             return  ResponseEntity.internalServerError().build();
         }
     }
-    @DeleteMapping("/delete/clear")
-    public ResponseEntity<?> clearCart(@RequestBody long customerId) {
+    @DeleteMapping("/delete/clear/{customerId}")
+    public ResponseEntity<?> clearCart(@PathVariable long customerId) {
         try {
             cartRedisService.clearCart(customerId);
             return  ResponseEntity.ok("Success");

@@ -4,15 +4,20 @@ import com.example.cartService.model.dto.AddToCartRequest;
 import com.example.cartService.model.dto.ProductCartResDto;
 import com.example.cartService.service.CartRedisService;
 import com.example.cartService.utils.KeyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Service
 public class CartRedisServiceImpl extends BaseRedisServiceImpl implements CartRedisService {
     private KeyUtils keyUtils;
+
+    @Autowired
     public CartRedisServiceImpl(RedisTemplate<String , Object> redisTemplate,
                                 HashOperations<String, String, Object> hashOperations,
                                 KeyUtils keyUtils) {
@@ -20,12 +25,10 @@ public class CartRedisServiceImpl extends BaseRedisServiceImpl implements CartRe
         this.keyUtils = keyUtils;
     }
 
-
     @Override
     public void addProductToCart(AddToCartRequest addToCartRequest) {
         String field = "product:" +  addToCartRequest.getProductId();
         String key = String.valueOf(addToCartRequest.getCustomerId());
-
         if(hashExits(key, field)) {
             int numberOfProduct =(int) hashGet(key, field);
             numberOfProduct += addToCartRequest.getQuantity();
@@ -60,7 +63,7 @@ public class CartRedisServiceImpl extends BaseRedisServiceImpl implements CartRe
         List<ProductCartResDto> productCartResDtos = new ArrayList<>();
         Set<String> setKey = getFieldPrefix(key);
         for(String s : setKey) {
-            long id = keyUtils.extractProductId(s);
+            String id = keyUtils.extractProductId(s);
             ProductCartResDto productCartResDto = new ProductCartResDto();
             productCartResDto.setQuantity((int) hashGet(key, s));
             productCartResDto.setProductId(id);

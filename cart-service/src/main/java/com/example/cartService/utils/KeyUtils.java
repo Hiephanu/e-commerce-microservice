@@ -1,7 +1,10 @@
 package com.example.cartService.utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class KeyUtils {
-    public long extractProductId(String key) {
-        return  Long.parseLong(key.substring(8));
+    public String extractProductId(String key) {
+        return  key.substring(8);
     }
 }

@@ -8,6 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 public class ProductCartResDto {
-    private long productId;
+    private String productId;
     private int quantity;
 }

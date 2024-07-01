@@ -2,6 +2,7 @@ package com.example.cartService.service.serviceImpl;
 
 import com.example.cartService.service.BaseRedisService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,16 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@AllArgsConstructor
 public class BaseRedisServiceImpl implements BaseRedisService {
 
-    RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    HashOperations<String , String, Object> hashOperations;
+    private final HashOperations<String , String, Object> hashOperations;
+
+    public BaseRedisServiceImpl(RedisTemplate<String, Object> redisTemplate, HashOperations<String , String, Object> hashOperations) {
+        this.redisTemplate = redisTemplate;
+        this.hashOperations = hashOperations;
+    }
 
     @Override
     public void set(String key, String value) {
